@@ -1,0 +1,37 @@
+
+body {
+    background-image: none;
+    font-size: 30px;
+}
+/*
+.title {
+    /* background: url('f.svg'); only need this if we have navigation * / 
+    background-size: 68px 76px;
+    width: 68px;
+    height: 76px;
+}*/
+
+header {
+    box-shadow: none;
+}
+footer {
+    box-shadow: none;
+}
+.feed-block {
+    width: 98%;
+    margin: 15px 0px 15px 0px;
+    box-shadow: none;
+}
+.feed-head {
+    font-size:40px;
+}
+.feed-item {
+    line-height: 60px;
+}
+#cssmenu ul li a {
+    font-size:30px;
+}
+
+.category-title {
+    padding-right: 10px;
+}

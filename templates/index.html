@@ -1,0 +1,23 @@
+{% set active = "news" %}
+{% set title = "fabtab" %}
+{% include '_header.html' %}
+
+<div class="category-title">News</div>
+{% for feed in categories['news'] %}
+    {% set feed_index = loop.index %}
+    {% include '_feed.html' %}
+{% endfor %}
+
+<div class="category-title">Tech</div>
+{% for feed in categories['technology'] %}
+    {% set feed_index = loop.index %}
+    {% include '_feed.html' %}
+{% endfor %}
+
+<div class="category-title">Games</div>
+{% for feed in categories['games'] %}
+    {% set feed_index = loop.index %}
+    {% include '_feed.html' %}
+{% endfor %}
+
+{% include '_footer.html' %}

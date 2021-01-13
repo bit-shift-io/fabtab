@@ -1,0 +1,67 @@
+{
+	"games" : [
+		{
+			"id": "gamingonlinux",
+			"title": "Gaming On Linux",
+			"rss_link": "https://www.gamingonlinux.com/article_rss.php",
+			"website_link": "https://www.gamingonlinux.com/",
+			"favicon": ""
+		},
+		{
+			"id": "rockpapershotgun",
+			"title": "Rock, Paper, Shotgun",
+			"rss_link": "http://feeds.feedburner.com/RockPaperShotgun",
+			"website_link": "http://www.rockpapershotgun.com/",
+			"favicon": "http://www.rockpapershotgun.com/wp-content/themes/rockpapershotgun/images/favicon-new.ico"
+		}
+
+	],
+
+	"technology" : [
+		{
+			"id": "phronix",
+			"title": "Phoronix",
+			"rss_link": "http://www.phoronix.com/rss.php",			
+			"website_link": "http://phoronix.com/",
+			"favicon": ""
+		},
+		{
+			"id": "wccftech",
+			"title": "WCCF Tech",
+			"rss_link": "http://feeds2.feedburner.com/Wccftechcom",			
+			"website_link": "http://wccftech.com/",
+			"favicon": "http://cdn.wccftech.com/wp-content/themes/wccf2011/images/favicon.png"
+		}
+	],
+		
+	"news" : [
+		{
+			"id": "timesofisrael",
+			"title": "Times of Israel",
+			"rss_link": "http://www.timesofisrael.com/feed/",			
+			"website_link": "http://www.timesofisrael.com/",
+			"favicon": "http://cdn.timesofisrael.com/images/favicon.ico"
+		},
+		{
+			"id": "googlenews",
+			"title": "Google News",
+			"rss_link": "https://news.google.com/news/rss/?gl=US&ned=us&hl=en",			
+			"website_link": "http://news.google.com/",
+			"favicon": "https://ssl.gstatic.com/news-static/img/favicon.ico"
+		},
+		{
+			"id": "bbc",
+			"title": "BBC World News",
+			"rss_link": "http://feeds.bbci.co.uk/news/world/rss.xml",			
+			"website_link": "https://www.bbc.com/news/world",
+			"favicon": ""
+		},
+		{
+			"id": "epoch",
+			"title": "Epoch Times",
+			"rss_link": "https://www.theepochtimes.com/c-world/feed/",			
+			"website_link": "https://www.theepochtimes.com/",
+			"favicon": ""
+		}
+	]		
+}

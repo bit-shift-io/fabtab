@@ -1,0 +1,26 @@
+
+<div class="feed-block col-centered feed-block-{{ feed_index }}">
+	<a href="{{ feed.website_link }}" target="_blank" class="feed-head">
+		{{ feed.title }}
+	</a>
+	
+	<div class="feed-body">
+		<ul id="{{ feed.id }}_link">
+
+			<div class="loading-container">
+				<div class="loading">
+
+				<div class="shape1"></div>
+				<div class="shape2"></div>
+				<div class="shape3"></div>
+				<div class="shape4"></div>
+			</div>
+			
+		</ul>
+
+		<script type="text/javascript">
+			read_rss_into_element("{{ feed.id }}_link", "{{ feed.rss_link }}");
+		</script>
+	</div>
+
+</div>

@@ -51,7 +51,7 @@ function process_rss_queue() {
                 // remove loading indicator
                 content.innerHTML = '';
 
-                const MAX_ITEMS = 10;
+                const MAX_ITEMS = 20;
                 for( var i=0,t = Math.min(MAX_ITEMS, data.items.length) ; i < t ; ++i ){
                     var item = data.items[i];
                     var itemContainer = document.createElement('LI');

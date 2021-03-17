@@ -1,4 +1,4 @@
 #!/bin/bash
 
-cd public
+cd ../public
 python3 -m http.server

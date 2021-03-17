@@ -64,7 +64,9 @@ function process_rss_queue() {
                     var decodedItemLink = item.link.replace(/&amp;/g, '&');
                     itemLinkElement.setAttribute('href' , decodedItemLink);
                     
-                    itemLinkElement.innerText = item.title;
+
+                    var decodedTitle = item.title.replace(/&amp;/g, '&');
+                    itemLinkElement.innerText = decodedTitle;
 
                     itemContainer.appendChild(itemLinkElement);
 

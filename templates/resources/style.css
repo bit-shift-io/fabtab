@@ -476,22 +476,11 @@ div.shape4 {
 =MOBILE
 ------------------------------*/
 
-@media only screen and (max-width: 800px) {
-    body {
-        background-image: none;
-    }
-    
-    .feed-block {
-        margin-left: 5px;
-        margin-right: 5px;
-    }
-
-    .category-title {
-        max-width: 600px;
-        width: 100%;
-        padding-right: 5px;
-    }
+/*
+@media only screen and (max-width: 600px) {
+    {% include 'mobile.css' %}
 }
+*/
 
 @media only screen and (max-width: 1295px) {
     .category-title {

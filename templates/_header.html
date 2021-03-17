@@ -6,6 +6,12 @@
 		<script type="text/javascript" src="resources/scripts.js"></script>
 		<link rel="shortcut icon" href="resources/favicon.svg" />
 		<link href="resources/style.css" rel="stylesheet" type="text/css"/>
+
+		<script type="text/javascript">
+			if (window.mobilecheck()) {
+				document.write('<link rel="stylesheet" type="text/css" href="resources/mobile.css" />');
+			}
+		</script>
 	</head>
 		
 	<body>

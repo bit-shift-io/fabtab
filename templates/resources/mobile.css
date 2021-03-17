@@ -1,0 +1,17 @@
+body {
+    background-image: none;
+    font-size: 20px;
+}
+
+.feed-block {
+    margin-left: 5px;
+    margin-right: 5px;
+
+    width: 100%;
+}
+
+.category-title {
+    max-width: 600%;
+    width: 100%;
+    padding-right: 10px;
+}

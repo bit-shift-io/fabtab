@@ -5,11 +5,11 @@
 		<title>{{ title }}</title>
 		<script type="text/javascript" src="resources/scripts.js"></script>
 		<link rel="shortcut icon" href="resources/favicon.svg" />
-		<link href="resources/style.css" rel="stylesheet" type="text/css"/>
+		<link href="resources/style.css?uuid={{ uuid }}" rel="stylesheet" type="text/css"/>
 
 		<script type="text/javascript">
 			if (window.mobilecheck()) {
-				document.write('<link rel="stylesheet" type="text/css" href="resources/mobile.css" />');
+				document.write('<link rel="stylesheet" type="text/css" href="resources/mobile.css?uuid={{ uuid }}" />');
 			}
 		</script>
 	</head>

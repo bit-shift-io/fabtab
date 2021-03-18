@@ -6,6 +6,7 @@ from jinja2 import Environment, FileSystemLoader
 import logging
 import os
 import json
+import uuid
 
 class RelEnvironment(Environment):
     """Override join_path() to enable relative template paths."""
@@ -27,6 +28,7 @@ if __name__ == "__main__":
 
     env_globals={
         'categories': categories,
+        'uuid': uuid.uuid1()
     }
 
     logger = logging.getLogger(__name__)
@@ -41,4 +43,4 @@ if __name__ == "__main__":
     site = MySite(environment=environment, outpath="../public", searchpath=searchpath, encoding='utf8', logger=logger)
 
     # enable automatic reloading
-    site.render(use_reloader=True)
+    site.render(use_reloader=False) #True)

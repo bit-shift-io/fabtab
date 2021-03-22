@@ -15,11 +15,17 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
-    
+
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none; 
 }
+
 a {
     text-decoration: none;
     color: rgb(40, 40, 40); /*rgb(240, 240, 240);*/
+
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
 }
 
 /*------------------------------
@@ -329,7 +335,7 @@ footer a {
 }
 
 li {
-    border-top: 1px solid #cacaca;
+    border-top: 2px solid #cacaca;
 }
 
 li:first-child {

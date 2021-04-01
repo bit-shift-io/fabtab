@@ -1,15 +1,11 @@
 body {
     background-image: none;
-    font-size: 24px;
+    font-size: 24pt;
     line-height: 45px;
 }
 
-.category-title {
-    font-size: 50px;
-}
-
-.feed-head {
-    font-size: 34px;
+.feed-container {
+    width: 100%;
 }
 
 .feed-block {

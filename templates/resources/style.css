@@ -7,7 +7,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: "Open Sans";
-    font-size: 16px;
+    font-size: 14pt;
     line-height: 30px;
     color: rgb(40, 40, 40); /* text color */
     
@@ -213,7 +213,7 @@ footer a {
     padding-top: 30px;
     padding-bottom: 10px;
     text-transform: uppercase;
-    font-size: 40px;
+    font-size: 250%;
     font-weight: 600;
     color: rgb(40, 40, 40);
     text-shadow: 0px 0px 10px white;
@@ -297,7 +297,7 @@ footer a {
 
 }
 .feed-head {
-    font-size: 22px;
+    font-size: 120%;
     font-weight: 600;
     color: rgb(40, 40, 40);
     text-shadow: 0px 0px 10px white;
@@ -358,11 +358,11 @@ li:first-child {
 .tooltip-title {
 	color:rgb(40, 40, 40); /* font */
     font-weight: bold;
-    font-size: 18px;
+    font-size: 18pt;
     margin: 0px 0px 10px 0px;
 }
 .tooltip-description {
-    font-size: 16px;
+    font-size: 16pt;
     letter-spacing: 0.5px;
     line-height: 150%;
     
@@ -382,17 +382,17 @@ li:first-child {
     padding: 10px;
 }
 .loading {
-    animation-duration: 2s;
+    animation-duration: 3s;
    animation-fill-mode: forwards;
    animation-iteration-count: infinite;
    animation-name: wave;
    animation-timing-function: linear;
-    -webkit-animation-duration: 2s;
+    -webkit-animation-duration: 3s;
     -webkit-animation-fill-mode: forwards;
     -webkit-animation-iteration-count: infinite;
     -webkit-animation-name: wave;
     -webkit-animation-timing-function: linear;
-     -moz-animation-duration: 2s;
+     -moz-animation-duration: 3s;
     -moz-animation-fill-mode: forwards;
     -moz-animation-iteration-count: infinite;
     -moz-animation-name: wave;
@@ -403,8 +403,7 @@ li:first-child {
     background-image: -moz-gradient(linear,  left center,  right center,  from(#dddddd),  color-stop(.2,  #f5f5f5),  color-stop(.4,  #e5e5e5),  to(#dddddd));
     background-image: -moz-linear-gradient(left,  #dddddd 0%,  #f5f5f5 20%, #e5e5e5 40%, #dddddd 100%);
     background-repeat: no-repeat;
-    background-size: 800px 104px;
-    height: 104px;
+    background-size: 120% 100%;
     position: relative;
 }
 .reverse-direction .loading {
@@ -413,34 +412,22 @@ li:first-child {
 }
 .loading div {
     background-color: #f1f1f1;
-    height: 6px;
-    left: 0;
-    position: absolute;
-    right: 0;
+    width: 100%;
+    height: 5px;
 }
 div.shape1 {
-    height: 5px;
-    left: 0px;
-    right: 0px;
-    top: 0px;
+    margin-top: 0px;
+    height: 20px;
+    background-color: transparent;
 }
 div.shape2 {
-    height: 5px;
-    left: 0px;
-    right: 0px;
-    top: 20px;
+    margin-top: 20px;
 }
 div.shape3 {
-    height: 5px;
-    left: 0px;
-    right: 0px;
-    top: 40px;
+    margin-top: 50px;
 }
 div.shape4 {
-    height: 5px;
-    left: 0px;
-    right: 0px;
-    top: 60px;
+    margin-top: 30px;
 }
 
 @-webkit-keyframes wave {

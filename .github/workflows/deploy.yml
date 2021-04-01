@@ -32,3 +32,26 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+
+      - name: Setup Python
+        uses: actions/setup-python@v2.2.1
+        with:
+          # Version range or exact version of a Python version to use, using SemVer's version range syntax.
+          python-version: # optional, default is 3.x
+          # The target architecture (x86, x64) of the Python interpreter.
+          architecture: # optional
+          # Used to pull python distributions from actions/python-versions. Since there's a default, this is typically not supplied by the user.
+          token: # optional, default is ${{ github.token }}
+
+      # this Action should follow steps to set up Python build environment
+      - name: Install Python dependencies
+        uses: py-actions/py-dependency-install@v2
+
+      - name: Build
+        run: cd tools && ./build.py
+
+      - name: Upload
+        run: cd tools && ./upload.py ${{secrets.FTP_USERNAME}} ${{secrets.FTP_PASSWORD}}
+
+      - name: Run a one-line script
+        run: echo All done!

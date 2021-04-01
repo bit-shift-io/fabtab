@@ -3,9 +3,14 @@
 import os.path, os
 from ftplib import FTP, error_perm
 from getpass import getpass
+import sys
 
-username = input("Username:")
-password = getpass()
+if (len(sys.argv) == 3):
+    username = sys.argv[1]
+    password = sys.argv[2]
+else:
+    username = input("Username:")
+    password = getpass()
 
 ftp = FTP('ftpupload.net')
 ftp.login(username, password)

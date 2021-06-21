@@ -17,6 +17,9 @@ body {
     background-attachment: fixed;
     background-size: cover;
 
+    background-color: rgba(0,0,0,.5); /* Tint color */
+    background-blend-mode: multiply;
+
     -webkit-text-size-adjust: none;
     text-size-adjust: none; 
 }

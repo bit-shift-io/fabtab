@@ -2,7 +2,6 @@
 = CUSTOM FONTS
 ------------------------------*/
 
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600);
 body {
     margin: 0;
     padding: 0;
@@ -10,16 +9,7 @@ body {
     font-size: 14pt;
     line-height: 200%;
     color: rgb(40, 40, 40); /* text color */
-    
-    background-color: #191919; /*black;*/
-    background-image: url('https://source.unsplash.com/random/1920x1080?scenic');
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-
-    background-color: rgba(0,0,0,.5); /* Tint color */
-    background-blend-mode: multiply;
-
+    background-color: rgb(0,0,0); 
     -webkit-text-size-adjust: none;
     text-size-adjust: none; 
 }
@@ -30,6 +20,25 @@ a {
 
     -webkit-text-size-adjust: none;
     text-size-adjust: none;
+}
+
+.bg-lazy {
+    height: 100vh;
+    width: 100vw;
+    transition: opacity 1s ease-out;
+    position: fixed;
+    background-color: rgba(0,0,0,.5); /* Tint color */
+    background-blend-mode: multiply;
+}
+
+.bg-loading {
+    opacity: 0;
+}
+
+.page {
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
 }
 
 /*------------------------------

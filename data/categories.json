@@ -36,6 +36,13 @@
 		
 	"news" : [
 		{
+			"id": "abc",
+			"title": "ABC",
+			"rss_link": "https://newsapi.org/v1/articles?source=abc-news-au&sortBy=top&apiKey=1f9da58adc9f4197bc26b657821e0722",
+			"website_link": "https://www.abc.net.au/news/",
+			"favicon": "https://www.abc.net.au/news-web/assets/favicon.ico"
+		},
+		{
 			"id": "timesofisrael",
 			"title": "Times of Israel",
 			"rss_link": "http://www.timesofisrael.com/feed/",			

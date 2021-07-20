@@ -24,6 +24,29 @@ function start_process_rss_queue() {
     process_rss_queue();
 }
 
+const append_to_content = (content, item) => {
+    var itemContainer = document.createElement('LI');
+    var itemLinkElement = document.createElement('A');
+
+    // <a href="<?= $item["link"]; ?>" target="_blank" id="<?= $feed["name"]; ?>_link_<?= $index; ?>" class="feed-item unread">
+    itemLinkElement.className = "feed-item";
+    itemLinkElement.setAttribute('target', '_blank');
+
+    var decodedItemLink = item.link.replace(/&amp;/g, '&');
+    itemLinkElement.setAttribute('href' , decodedItemLink);
+    
+
+    var decodedTitle = item.title.replace(/&amp;/g, '&');
+    itemLinkElement.innerText = decodedTitle;
+
+    itemContainer.appendChild(itemLinkElement);
+
+    //itemsContainer.appendChild(itemContainer);
+
+    //content.removeChild(content.children[0]);
+    content.appendChild(itemContainer);
+}
+
 function process_rss_queue() {
     console.log("process_rss_queue");
 
@@ -32,6 +55,8 @@ function process_rss_queue() {
         return;
     }
 
+    const MAX_ITEMS = 20;
+
     const { elementName, url } = rss_queue[0];
     rss_queue.shift();
 
@@ -39,44 +64,34 @@ function process_rss_queue() {
 
     var xhr = new XMLHttpRequest();
 
-    xhr.onload = function(args) {
+    const newsapi = (args) => {
+        console.log("loaded!");
+        if (xhr.status==200) {
+            const data = JSON.parse(xhr.responseText);
+
+            // remove loading indicator
+            content.innerHTML = '';
+
+            for( var i=0,t = Math.min(MAX_ITEMS, data.articles.length) ; i < t ; ++i ){
+                var {title, url} = data.articles[i];
+                append_to_content(content, {title, link: url});
+            }
+        }
+    }
+
+    const rss2json = (args) => {
         console.log("loaded!");
 
         if (xhr.status==200) {
-            var data = JSON.parse(xhr.responseText);
-            //var itemsContainer = document.createElement('LI');
-
+            const data = JSON.parse(xhr.responseText);
             if (data.status == 'ok'){
-
                 // remove loading indicator
                 content.innerHTML = '';
 
-                const MAX_ITEMS = 20;
                 for( var i=0,t = Math.min(MAX_ITEMS, data.items.length) ; i < t ; ++i ){
                     var item = data.items[i];
-                    var itemContainer = document.createElement('LI');
-                    var itemLinkElement = document.createElement('A');
-
-                    // <a href="<?= $item["link"]; ?>" target="_blank" id="<?= $feed["name"]; ?>_link_<?= $index; ?>" class="feed-item unread">
-                    itemLinkElement.className = "feed-item";
-                    itemLinkElement.setAttribute('target', '_blank');
-
-                    var decodedItemLink = item.link.replace(/&amp;/g, '&');
-                    itemLinkElement.setAttribute('href' , decodedItemLink);
-                    
-
-                    var decodedTitle = item.title.replace(/&amp;/g, '&');
-                    itemLinkElement.innerText = decodedTitle;
-
-                    itemContainer.appendChild(itemLinkElement);
-
-                    //itemsContainer.appendChild(itemContainer);
-
-                    //content.removeChild(content.children[0]);
-                    content.appendChild(itemContainer);
+                    append_to_content(content, item);
                 }
-
-                //content.appendChild(itemsContainer);
             }
         }
 
@@ -87,9 +102,18 @@ function process_rss_queue() {
         //}
     };
 
+    let request_url = '';
+    if (url.includes('newsapi')) {
+        request_url = url;
+        xhr.onload = newsapi;
+    } else {
+        request_url = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURI(url);
+        xhr.onload = rss2json;
+    }
+
     xhr.open(
         'GET',
-        'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURI(url),
+        request_url,
         true
     );
 

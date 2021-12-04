@@ -19,6 +19,12 @@ function shuffleArray(array) {
     }
 }
 
+// https://stackoverflow.com/questions/7394748/whats-the-right-way-to-decode-a-string-that-has-special-html-entities-in-it/7394787
+function decodeHtml(html) {
+    const r = he.decode(html);
+    return r;
+}
+
 function start_process_rss_queue() {
     shuffleArray(rss_queue);
     process_rss_queue();
@@ -28,16 +34,17 @@ const append_to_content = (content, item) => {
     var itemContainer = document.createElement('LI');
     var itemLinkElement = document.createElement('A');
 
+    
+    //const dtest = decodeHtml('What is La Ni&ntilde;a and do its rains mean boom or bust for Australian farmers?')
     // <a href="<?= $item["link"]; ?>" target="_blank" id="<?= $feed["name"]; ?>_link_<?= $index; ?>" class="feed-item unread">
     itemLinkElement.className = "feed-item";
     itemLinkElement.setAttribute('target', '_blank');
 
-    var decodedItemLink = item.link.replace(/&amp;/g, '&');
+    var decodedItemLink = decodeHtml(item.link);
     itemLinkElement.setAttribute('href' , decodedItemLink);
     
-
-    var decodedTitle = item.title.replace(/&amp;/g, '&');
-    itemLinkElement.innerText = decodedTitle;
+    var decodedTitle = decodeHtml(item.title);
+    itemLinkElement.innerHTML = decodedTitle;
 
     itemContainer.appendChild(itemLinkElement);
 

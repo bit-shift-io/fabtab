@@ -31,6 +31,18 @@
 			"rss_link": "http://feeds2.feedburner.com/Wccftechcom",			
 			"website_link": "http://wccftech.com/",
 			"favicon": "http://cdn.wccftech.com/wp-content/themes/wccf2011/images/favicon.png"
+		},
+		{
+			"id": "marktechpost",
+			"title": "Marktechpost",
+			"rss_link": "https://www.marktechpost.com/feed/",
+			"website_link": "https://www.marktechpost.com/"
+		},
+		{
+			"id": "scitechdaily",
+			"title": "SciTechDaily",
+			"rss_link": "https://scitechdaily.com/feed/",
+			"website_link": "https://scitechdaily.com/"
 		}
 	],
 		

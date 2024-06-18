@@ -3,7 +3,7 @@
 
 from staticjinja import Site
 from jinja2 import Environment, FileSystemLoader
-import logging
+#import logging
 import os
 import json
 import uuid
@@ -31,16 +31,16 @@ if __name__ == "__main__":
         'uuid': uuid.uuid1()
     }
 
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.INFO)
-    logger.addHandler(logging.StreamHandler())
+    #logger = logging.getLogger(__name__)
+    #logger.setLevel(logging.INFO)
+    #logger.addHandler(logging.StreamHandler())
 
     environment = RelEnvironment(
         loader=FileSystemLoader(searchpath=searchpath, encoding='utf8', followlinks=True)
     )
     environment.globals.update(env_globals)
  
-    site = MySite(environment=environment, outpath="../public", searchpath=searchpath, encoding='utf8', logger=logger)
+    site = MySite(environment=environment, outpath="../public", searchpath=searchpath, encoding='utf8')#, logger=logger)
 
     # enable automatic reloading
     site.render(use_reloader=False) #True)

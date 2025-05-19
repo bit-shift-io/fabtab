@@ -1,1 +1,1 @@
-staticjinja==1.0.4
+staticjinja==5.0.0

@@ -21,9 +21,9 @@ class MySite(Site):
         return not filename.endswith(".html") and not filename.endswith(".css")
 
 if __name__ == "__main__":
-    searchpath="../templates"
+    searchpath="templates"
 
-    with open('../data/categories.json') as json_file:
+    with open('data/categories.json') as json_file:
         categories = json.load(json_file)
 
     env_globals={
@@ -40,7 +40,7 @@ if __name__ == "__main__":
     )
     environment.globals.update(env_globals)
  
-    site = MySite(environment=environment, outpath="../public", searchpath=searchpath, encoding='utf8')#, logger=logger)
+    site = MySite(environment=environment, outpath="public", searchpath=searchpath, encoding='utf8')#, logger=logger)
 
     # enable automatic reloading
     site.render(use_reloader=False) #True)

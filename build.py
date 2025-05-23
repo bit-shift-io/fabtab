@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 # https://staticjinja.readthedocs.io/en/latest/user/advanced.html
 
+import sys
+print(sys.executable)
+
 from staticjinja import Site
 from jinja2 import Environment, FileSystemLoader
 #import logging

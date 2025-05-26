@@ -34,11 +34,11 @@
 		
 	"news" : [
 		{
-			"id": "abcaustralia",
-			"title": "ABC Australia",
-			"rss_link": "https://www.abc.net.au/news/feed/2942460/rss.xml",
-			"website_link": "https://www.abc.net.au/news",
-			"favicon": "https://www.abc.net.au/news-assets/favicon-32x32.png"
+			"id": "newsaustralia",
+			"title": "News Australia",
+			"rss_link": "https://www.news.com.au/content-feeds/latest-news-national/",
+			"website_link": "https://www.news.com.au/",
+			"favicon": ""
 		},
 		{
 			"id": "thejerusalempost",

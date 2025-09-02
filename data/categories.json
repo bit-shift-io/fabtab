@@ -4,8 +4,13 @@
 			"id": "gamingonlinux",
 			"title": "Gaming On Linux",
 			"rss_link": "https://www.gamingonlinux.com/article_rss.php",
-			"website_link": "https://www.gamingonlinux.com/",
-			"favicon": ""
+			"website_link": "https://www.gamingonlinux.com/"
+		},
+		{
+			"id": "gamerant",
+			"title": "Game Rant",
+			"rss_link": "https://gamerant.com/feed/gaming/",
+			"website_link": "https://gamerant.com/gaming/"
 		}
 	],
 
@@ -14,15 +19,19 @@
 			"id": "phronix",
 			"title": "Phoronix",
 			"rss_link": "http://www.phoronix.com/rss.php",			
-			"website_link": "http://phoronix.com/",
-			"favicon": ""
+			"website_link": "http://phoronix.com/"
 		},
 		{
-			"id": "wccftech",
-			"title": "WCCF Tech",
-			"rss_link": "http://feeds2.feedburner.com/Wccftechcom",			
-			"website_link": "http://wccftech.com/",
-			"favicon": "http://cdn.wccftech.com/wp-content/themes/wccf2011/images/favicon.png"
+			"id": "linuxgizmos",
+			"title": "LinuxGizmos",
+			"rss_link": "https://linuxgizmos.com/feed/",			
+			"website_link": "https://linuxgizmos.com/"
+		},
+		{
+			"id": "liliputing",
+			"title": "Liliputing",
+			"rss_link": "https://liliputing.com/feed/",			
+			"website_link": "https://liliputing.com/"
 		},
 		{
 			"id": "scitechdaily",
@@ -34,32 +43,40 @@
 		
 	"news" : [
 		{
+			"id": "sbs",
+			"title": "SBS News",
+			"rss_link": "https://www.sbs.com.au/news/feed",
+			"website_link": "https://www.sbs.com.au/news"
+		},
+		{
+			"id": "abcaustralia",
+			"title": "ABC Australia",
+			"rss_link": "https://www.abc.net.au/news/feed/2942460/rss.xml",
+			"website_link": "https://www.abc.net.au/news"
+		},
+		{
 			"id": "newsaustralia",
 			"title": "News Australia",
 			"rss_link": "https://www.news.com.au/content-feeds/latest-news-national/",
-			"website_link": "https://www.news.com.au/",
-			"favicon": ""
+			"website_link": "https://www.news.com.au/"
 		},
 		{
 			"id": "thejerusalempost",
 			"title": "The Jerusalem Post",
 			"rss_link": "https://www.jpost.com/Rss/RssFeedsFrontPage.aspx",			
-			"website_link": "https://www.jpost.com/",
-			"favicon": "https://images.jpost.com/image/upload/f_auto,fl_lossy/Icons/PNG/jp-favicon-32.png"
+			"website_link": "https://www.jpost.com/"
 		},
 		{
 			"id": "googlenews",
 			"title": "Google News",
 			"rss_link": "https://news.google.com/news/rss/?gl=US&ned=us&hl=en",			
-			"website_link": "http://news.google.com/",
-			"favicon": "https://ssl.gstatic.com/news-static/img/favicon.ico"
+			"website_link": "http://news.google.com/"
 		},
 		{
 			"id": "bbc",
 			"title": "BBC World News",
 			"rss_link": "http://feeds.bbci.co.uk/news/world/rss.xml",			
-			"website_link": "https://www.bbc.com/news/world",
-			"favicon": "https://static.files.bbci.co.uk/bbcdotcom/web/20250522-140200-09101d307-web-2.22.2-1/favicon-32x32.png"
+			"website_link": "https://www.bbc.com/news/world"
 		}
 	]		
 }

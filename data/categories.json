@@ -22,10 +22,10 @@
 			"website_link": "http://phoronix.com/"
 		},
 		{
-			"id": "linuxgizmos",
-			"title": "LinuxGizmos",
-			"rss_link": "https://linuxgizmos.com/feed/",			
-			"website_link": "https://linuxgizmos.com/"
+			"id": "slashdot",
+			"title": "Slashdot",
+			"rss_link": "https://rss.slashdot.org/Slashdot/slashdotMain",			
+			"website_link": "https://slashdot.org/"
 		},
 		{
 			"id": "liliputing",

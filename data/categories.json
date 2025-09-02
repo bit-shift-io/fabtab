@@ -67,6 +67,12 @@
 			"website_link": "https://www.jpost.com/"
 		},
 		{
+			"id": "foxnews",
+			"title": "World Fox News",
+			"rss_link": "https://moxie.foxnews.com/google-publisher/world.xml",
+			"website_link": "https://www.foxnews.com/world"
+		},
+		{
 			"id": "googlenews",
 			"title": "Google News",
 			"rss_link": "https://news.google.com/news/rss/?gl=US&ned=us&hl=en",			

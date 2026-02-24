@@ -24,6 +24,9 @@ class MySite(Site):
         return not filename.endswith(".html") and not filename.endswith(".css")
 
 if __name__ == "__main__":
+    # Change working directory to the root of the project
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
     searchpath="templates"
 
     with open('data/categories.json') as json_file:

@@ -1,26 +1,29 @@
+<div class="feed-block feed-block-{{ feed_index }}" id="feed-block-{{ feed.id }}">
+	<div class="feed-header-wrapper">
+		<a href="{{ feed.website_link }}" target="_blank" class="feed-head">
+			{{ feed.title }}
+		</a>
+		<span class="feed-toggle" id="toggle-{{ feed.id }}"
+			onclick="toggle_feed('{{ feed.id }}', '{{ feed.rss_link }}')">-</span>
+	</div>
 
-<div class="feed-block feed-block-{{ feed_index }}">
-	<a href="{{ feed.website_link }}" target="_blank" class="feed-head">
-		{{ feed.title }}
-	</a>
-	
 	<div class="feed-body">
 		<ul id="{{ feed.id }}_link">
 
 			<div class="loading-container">
 				<div class="loading">
 
-				<div class="shape1"></div>
-				<div class="shape2"></div>
-				<div class="shape3"></div>
-				<div class="shape4"></div>
-				<div class="shape3"></div>
-			</div>
-			
+					<div class="shape1"></div>
+					<div class="shape2"></div>
+					<div class="shape3"></div>
+					<div class="shape4"></div>
+					<div class="shape3"></div>
+				</div>
+
 		</ul>
 
 		<script type="text/javascript">
-			read_rss_into_element("{{ feed.id }}_link", "{{ feed.rss_link }}");
+			init_rss_feed("{{ feed.id }}_link", "{{ feed.rss_link }}", "{{ feed.id }}");
 		</script>
 	</div>
 

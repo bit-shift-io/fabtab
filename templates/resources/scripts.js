@@ -6,6 +6,46 @@ function read_rss_into_element(elementName, url) {
     rss_queue.push({ elementName, url });
 }
 
+function init_rss_feed(elementName, url, feedId) {
+    const isCollapsed = localStorage.getItem('feed_collapsed_' + feedId) === 'true';
+    if (isCollapsed) {
+        const feedBlock = document.getElementById('feed-block-' + feedId);
+        if (feedBlock) {
+            feedBlock.classList.add('collapsed');
+        }
+        const toggle = document.getElementById('toggle-' + feedId);
+        if (toggle) {
+            toggle.innerHTML = '+';
+        }
+    } else {
+        read_rss_into_element(elementName, url);
+    }
+}
+
+function toggle_feed(feedId, rssUrl) {
+    const feedBlock = document.getElementById('feed-block-' + feedId);
+    const toggle = document.getElementById('toggle-' + feedId);
+    if (!feedBlock) return;
+
+    const isCollapsed = feedBlock.classList.toggle('collapsed');
+    localStorage.setItem('feed_collapsed_' + feedId, isCollapsed);
+
+    if (isCollapsed) {
+        if (toggle) toggle.innerHTML = '+';
+    } else {
+        if (toggle) toggle.innerHTML = '-';
+        // If not loaded yet (has loading indicator), add to queue
+        const content = document.getElementById(feedId + '_link');
+        if (content && content.querySelector('.loading-container')) {
+            read_rss_into_element(feedId + '_link', rssUrl);
+            // If queue was empty, restart processing
+            if (rss_queue.length === 1) {
+                process_rss_queue();
+            }
+        }
+    }
+}
+
 /**
  * Randomize array element order in-place.
  * Using Durstenfeld shuffle algorithm.
@@ -59,8 +99,11 @@ function process_rss_queue() {
 
     if (rss_queue.length <= 0) {
         // all done!
+        is_processing = false;
         return;
     }
+
+    is_processing = true;
 
     const MAX_ITEMS = 8;
 
@@ -136,6 +179,13 @@ function process_rss_queue() {
     }, time);
 
     counter += 1;
+}
+
+var is_processing = false;
+function start_process_rss_queue() {
+    if (is_processing) return;
+    shuffleArray(rss_queue);
+    process_rss_queue();
 }
 
 // https://stackoverflow.com/questions/11381673/detecting-a-mobile-browser

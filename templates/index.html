@@ -4,26 +4,35 @@
 
 <div class="category-title">News</div>
 <div class="feed-container">
-{% for feed in categories['news'] %}
+    {% for feed in categories['news'] %}
     {% set feed_index = loop.index %}
     {% include '_feed.html' %}
-{% endfor %}
+    {% endfor %}
 </div>
 
 <div class="category-title">Tech</div>
 <div class="feed-container">
-{% for feed in categories['technology'] %}
+    {% for feed in categories['technology'] %}
     {% set feed_index = loop.index %}
     {% include '_feed.html' %}
-{% endfor %}
+    {% endfor %}
 </div>
 
 <div class="category-title">Games</div>
 <div class="feed-container">
-{% for feed in categories['games'] %}
+    {% for feed in categories['games'] %}
     {% set feed_index = loop.index %}
     {% include '_feed.html' %}
-{% endfor %}
+    {% endfor %}
+</div>
+
+
+<div class="category-title">FPV</div>
+<div class="feed-container">
+    {% for feed in categories['fpv'] %}
+    {% set feed_index = loop.index %}
+    {% include '_feed.html' %}
+    {% endfor %}
 </div>
 
 {% include '_footer.html' %}

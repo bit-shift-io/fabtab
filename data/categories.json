@@ -1,4 +1,36 @@
 {
+	"ai": [
+		{
+			"id": "aheadofai",
+			"title": "Ahead of AI",
+			"rss_link": "https://magazine.sebastianraschka.com/feed",
+			"website_link": "https://magazine.sebastianraschka.com/"
+		},
+		{
+			"id": "thegradient",
+			"title": "The Gradient",
+			"rss_link": "https://thegradient.pub/rss/",
+			"website_link": "https://thegradient.pub/"
+		},
+		{
+			"id": "towardsdatascience",
+			"title": "Towards Data Science",
+			"rss_link": "https://towardsdatascience.com/feed",
+			"website_link": "https://towardsdatascience.com/"
+		},
+		{
+			"id": "towardsai",
+			"title": "Towards AI",
+			"rss_link": "https://medium.com/feed/towards-artificial-intelligence",
+			"website_link": "https://medium.com/towards-artificial-intelligence"
+		},
+		{
+			"id": "aiinplainenglish",
+			"title": "AI in Plain English",
+			"rss_link": "https://medium.com/feed/ai-in-plain-english",
+			"website_link": "https://medium.com/ai-in-plain-english"
+		}
+	],
 	"fpv": [
 		{
 			"id": "oscarliang",
@@ -15,10 +47,10 @@
 			"website_link": "https://www.gamingonlinux.com/"
 		},
 		{
-			"id": "gamerant",
-			"title": "Game Rant",
-			"rss_link": "https://gamerant.com/feed/gaming/",
-			"website_link": "https://gamerant.com/gaming/"
+			"id": "pcgamer",
+			"title": "PC Gamer",
+			"rss_link": "https://www.pcgamer.com/rss/",
+			"website_link": "https://www.pcgamer.com/"
 		}
 	],
 	"technology": [

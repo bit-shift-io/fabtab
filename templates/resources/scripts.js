@@ -1,7 +1,7 @@
 
 var rss_queue = [];
 const RSS_FETCH_TIMEOUT_MS = 10000;
-const QUEUE_STAGGER_MS = 100;
+const TIER_STAGGER_MS = [100, 0, 0]; // rss2json needs breathing room; CORS proxies don't
 const MAX_ITEMS = 8;
 
 function read_rss_into_element(elementName, url) {
@@ -125,15 +125,6 @@ function fetchViaRss2Json(url) {
         });
 }
 
-function fetchViaFeed2Json(url) {
-    return fetchWithTimeout('https://feed2json.org/convert?url=' + encodeURIComponent(url))
-        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-        .then(data => {
-            if (!data.items?.length) throw new Error('no items');
-            return data.items.slice(0, MAX_ITEMS).map(i => ({ title: i.title, link: i.url }));
-        });
-}
-
 function fetchViaCorsproxy(url) {
     return fetchWithTimeout('https://corsproxy.io/?url=' + encodeURIComponent(url))
         .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
@@ -154,13 +145,12 @@ function fetchViaAllOrigins(url) {
 // The 100ms gap between attempts within a tier gives each service breathing room.
 //
 // Tier 0: rss2json   (RSS-to-JSON API)
-// Tier 1: feed2json  (RSS-to-JSON API)
-// Tier 2: corsproxy  (CORS proxy, XML parsed in browser)
-// Tier 3: allorigins (CORS proxy, XML parsed in browser)
+// Tier 1: corsproxy  (CORS proxy, XML parsed in browser)
+// Tier 2: allorigins (CORS proxy, XML parsed in browser)
 //
-const RSS_STRATEGIES = [fetchViaRss2Json, fetchViaFeed2Json, fetchViaCorsproxy, fetchViaAllOrigins];
-const rss_tiers = [[], [], [], []];
-const tier_running = [false, false, false, false];
+const RSS_STRATEGIES = [fetchViaRss2Json, fetchViaCorsproxy, fetchViaAllOrigins];
+const rss_tiers = [[], [], []];
+const tier_running = [false, false, false];
 
 function pushToTier(tierIndex, feed) {
     if (tierIndex >= RSS_STRATEGIES.length) {
@@ -186,8 +176,8 @@ async function processTier(tierIndex) {
         } catch (_) {
             pushToTier(tierIndex + 1, feed);
         }
-        if (queue.length > 0) {
-            await new Promise(resolve => setTimeout(resolve, QUEUE_STAGGER_MS));
+        if (queue.length > 0 && TIER_STAGGER_MS[tierIndex] > 0) {
+            await new Promise(resolve => setTimeout(resolve, TIER_STAGGER_MS[tierIndex]));
         }
     }
 

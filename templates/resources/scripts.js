@@ -222,6 +222,8 @@ function start_process_rss_queue() {
     if (is_processing) return;
     is_processing = true;
     shuffleArray(rss_queue);
+    // Priority feeds jump to the front so rss2json sees them before rate limiting kicks in
+    rss_queue.sort((a, b) => (b.url.includes('news.google.com') ? 1 : 0) - (a.url.includes('news.google.com') ? 1 : 0));
     for (const feed of rss_queue.splice(0)) {
         if (feed.url.includes('newsapi')) {
             processNewsapi(feed);

@@ -1,6 +1,8 @@
 
 var rss_queue = [];
-var counter = 0;
+const RSS_FETCH_TIMEOUT_MS = 10000;
+const QUEUE_STAGGER_MS = 100;
+const MAX_ITEMS = 8;
 
 function read_rss_into_element(elementName, url) {
     rss_queue.push({ elementName, url });
@@ -10,13 +12,9 @@ function init_rss_feed(elementName, url, feedId) {
     const isCollapsed = localStorage.getItem('feed_collapsed_' + feedId) === 'true';
     if (isCollapsed) {
         const feedBlock = document.getElementById('feed-block-' + feedId);
-        if (feedBlock) {
-            feedBlock.classList.add('collapsed');
-        }
+        if (feedBlock) feedBlock.classList.add('collapsed');
         const toggle = document.getElementById('toggle-' + feedId);
-        if (toggle) {
-            toggle.innerHTML = '+';
-        }
+        if (toggle) toggle.innerHTML = '+';
     } else {
         read_rss_into_element(elementName, url);
     }
@@ -34,16 +32,21 @@ function toggle_feed(feedId, rssUrl) {
         if (toggle) toggle.innerHTML = '+';
     } else {
         if (toggle) toggle.innerHTML = '-';
-        // If not loaded yet (has loading indicator), add to queue
         const content = document.getElementById(feedId + '_link');
         if (content && content.querySelector('.loading-container')) {
-            read_rss_into_element(feedId + '_link', rssUrl);
-            // If queue was empty, restart processing
-            if (rss_queue.length === 1) {
-                process_rss_queue();
+            const feed = { elementName: feedId + '_link', url: rssUrl };
+            if (rssUrl.includes('newsapi')) {
+                processNewsapi(feed);
+            } else {
+                pushToTier(0, feed);
             }
         }
     }
+}
+
+// https://stackoverflow.com/questions/7394748/whats-the-right-way-to-decode-a-string-that-has-special-html-entities-in-it/7394787
+function decodeHtml(html) {
+    return he.decode(html);
 }
 
 /**
@@ -53,139 +56,175 @@ function toggle_feed(feedId, rssUrl) {
 function shuffleArray(array) {
     for (var i = array.length - 1; i > 0; i--) {
         var j = Math.floor(Math.random() * (i + 1));
-        var temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
+        var temp = array[i]; array[i] = array[j]; array[j] = temp;
     }
-}
-
-// https://stackoverflow.com/questions/7394748/whats-the-right-way-to-decode-a-string-that-has-special-html-entities-in-it/7394787
-function decodeHtml(html) {
-    const r = he.decode(html);
-    return r;
-}
-
-function start_process_rss_queue() {
-    shuffleArray(rss_queue);
-    process_rss_queue();
 }
 
 const append_to_content = (content, item) => {
     var itemContainer = document.createElement('LI');
     var itemLinkElement = document.createElement('A');
-
-
-    //const dtest = decodeHtml('What is La Ni&ntilde;a and do its rains mean boom or bust for Australian farmers?')
-    // <a href="<?= $item["link"]; ?>" target="_blank" id="<?= $feed["name"]; ?>_link_<?= $index; ?>" class="feed-item unread">
     itemLinkElement.className = "feed-item";
     itemLinkElement.setAttribute('target', '_blank');
-
-    var decodedItemLink = decodeHtml(item.link);
-    itemLinkElement.setAttribute('href', decodedItemLink);
-
-    var decodedTitle = decodeHtml(item.title);
-    itemLinkElement.innerHTML = decodedTitle;
-
+    itemLinkElement.setAttribute('href', decodeHtml(item.link));
+    itemLinkElement.innerHTML = decodeHtml(item.title);
     itemContainer.appendChild(itemLinkElement);
-
-    //itemsContainer.appendChild(itemContainer);
-
-    //content.removeChild(content.children[0]);
     content.appendChild(itemContainer);
+};
+
+function renderItems(elementName, items) {
+    const content = document.getElementById(elementName);
+    if (!content) return;
+    content.innerHTML = '';
+    for (const item of items) append_to_content(content, item);
 }
 
-function process_rss_queue() {
-    console.log("process_rss_queue");
+function renderFailed(elementName) {
+    const content = document.getElementById(elementName);
+    if (!content) return;
+    content.innerHTML = '';
+    const p = document.createElement('p');
+    p.className = 'feed-failed';
+    p.textContent = 'Failed to load';
+    content.appendChild(p);
+}
 
-    if (rss_queue.length <= 0) {
-        // all done!
-        is_processing = false;
+// Parse XML string to items; handles base64 data URIs (allorigins) and RSS/Atom formats
+function parseXmlFeed(text) {
+    let xmlString = text;
+    if (xmlString && xmlString.startsWith('data:')) {
+        xmlString = atob(xmlString.split(',')[1]);
+    }
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(xmlString, 'text/xml');
+    if (xml.querySelector('parsererror')) throw new Error('XML parse error');
+    // RSS 2.0 uses <item>, Atom uses <entry>
+    let elements = [...xml.querySelectorAll('item')];
+    const isAtom = elements.length === 0;
+    if (isAtom) elements = [...xml.querySelectorAll('entry')];
+    if (elements.length === 0) throw new Error('no items');
+    return elements.slice(0, MAX_ITEMS).map(el => ({
+        title: el.querySelector('title')?.textContent || '',
+        link: isAtom
+            ? (el.querySelector('link')?.getAttribute('href') || '')
+            : (el.querySelector('link')?.textContent || ''),
+    }));
+}
+
+function fetchWithTimeout(url) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), RSS_FETCH_TIMEOUT_MS);
+    return fetch(url, { signal: controller.signal }).finally(() => clearTimeout(timeoutId));
+}
+
+function fetchViaRss2Json(url) {
+    return fetchWithTimeout('https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(url))
+        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(data => {
+            if (data.status !== 'ok') throw new Error('rss2json: ' + data.status);
+            return data.items.slice(0, MAX_ITEMS).map(i => ({ title: i.title, link: i.link }));
+        });
+}
+
+function fetchViaFeed2Json(url) {
+    return fetchWithTimeout('https://feed2json.org/convert?url=' + encodeURIComponent(url))
+        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(data => {
+            if (!data.items?.length) throw new Error('no items');
+            return data.items.slice(0, MAX_ITEMS).map(i => ({ title: i.title, link: i.url }));
+        });
+}
+
+function fetchViaCorsproxy(url) {
+    return fetchWithTimeout('https://corsproxy.io/?url=' + encodeURIComponent(url))
+        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+        .then(text => parseXmlFeed(text));
+}
+
+function fetchViaAllOrigins(url) {
+    return fetchWithTimeout('https://api.allorigins.win/get?url=' + encodeURIComponent(url))
+        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(({ contents }) => parseXmlFeed(contents));
+}
+
+//
+// Tier queue architecture
+//
+// Each tier is an independent sequential queue. Failures from tier N are pushed
+// into tier N+1 as they happen — tiers run concurrently, each at their own pace.
+// The 100ms gap between attempts within a tier gives each service breathing room.
+//
+// Tier 0: rss2json   (RSS-to-JSON API)
+// Tier 1: feed2json  (RSS-to-JSON API)
+// Tier 2: corsproxy  (CORS proxy, XML parsed in browser)
+// Tier 3: allorigins (CORS proxy, XML parsed in browser)
+//
+const RSS_STRATEGIES = [fetchViaRss2Json, fetchViaFeed2Json, fetchViaCorsproxy, fetchViaAllOrigins];
+const rss_tiers = [[], [], [], []];
+const tier_running = [false, false, false, false];
+
+function pushToTier(tierIndex, feed) {
+    if (tierIndex >= RSS_STRATEGIES.length) {
+        renderFailed(feed.elementName);
         return;
     }
+    rss_tiers[tierIndex].push(feed);
+    if (!tier_running[tierIndex]) {
+        processTier(tierIndex);
+    }
+}
 
-    is_processing = true;
+async function processTier(tierIndex) {
+    tier_running[tierIndex] = true;
+    const queue = rss_tiers[tierIndex];
+    const strategy = RSS_STRATEGIES[tierIndex];
 
-    const MAX_ITEMS = 8;
+    while (queue.length > 0) {
+        const feed = queue.shift();
+        try {
+            const items = await strategy(feed.url);
+            renderItems(feed.elementName, items);
+        } catch (_) {
+            pushToTier(tierIndex + 1, feed);
+        }
+        if (queue.length > 0) {
+            await new Promise(resolve => setTimeout(resolve, QUEUE_STAGGER_MS));
+        }
+    }
 
-    const { elementName, url } = rss_queue[0];
-    rss_queue.shift();
+    tier_running[tierIndex] = false;
+}
 
-    var content = document.getElementById(elementName);
-
+// newsapi feeds bypass the tier system — fetch directly, no fallback needed
+function processNewsapi(feed) {
     var xhr = new XMLHttpRequest();
-
-    const newsapi = (args) => {
-        console.log("loaded!");
+    xhr.onload = function () {
         if (xhr.status == 200) {
             const data = JSON.parse(xhr.responseText);
-
-            // remove loading indicator
+            const content = document.getElementById(feed.elementName);
+            if (!content) return;
             content.innerHTML = '';
-
             for (var i = 0, t = Math.min(MAX_ITEMS, data.articles.length); i < t; ++i) {
-                var { title, url } = data.articles[i];
-                append_to_content(content, { title, link: url });
+                var { title, url: articleUrl } = data.articles[i];
+                append_to_content(content, { title, link: articleUrl });
             }
         }
-    }
-
-    const rss2json = (args) => {
-        console.log("loaded!");
-
-        if (xhr.status == 200) {
-            const data = JSON.parse(xhr.responseText);
-            if (data.status == 'ok') {
-                // remove loading indicator
-                content.innerHTML = '';
-
-                for (var i = 0, t = Math.min(MAX_ITEMS, data.items.length); i < t; ++i) {
-                    var item = data.items[i];
-                    append_to_content(content, item);
-                }
-            }
-        }
-
-        // 429 = hitting the rss2json endpoint too hard, so don't pop off the 
-        // feed
-        //if (xhr.status!=429) {
-        //   rss_queue.shift();
-        //}
     };
-
-    let request_url = '';
-    if (url.includes('newsapi')) {
-        request_url = url;
-        xhr.onload = newsapi;
-    } else {
-        request_url = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURI(url);
-        xhr.onload = rss2json;
-    }
-
-    xhr.open(
-        'GET',
-        request_url,
-        true
-    );
-
+    xhr.open('GET', feed.url, true);
     xhr.send();
-
-    const longWait = false; //(counter % 3) == 0 && (counter != 0);
-    const time = longWait ? 30000 : 100;
-
-    // queue another call to process_rss_queue
-    console.log("queuing process_rss_queue to be called");
-    setTimeout(function () {
-        process_rss_queue()
-    }, time);
-
-    counter += 1;
 }
 
 var is_processing = false;
 function start_process_rss_queue() {
     if (is_processing) return;
+    is_processing = true;
     shuffleArray(rss_queue);
-    process_rss_queue();
+    for (const feed of rss_queue.splice(0)) {
+        if (feed.url.includes('newsapi')) {
+            processNewsapi(feed);
+        } else {
+            pushToTier(0, feed);
+        }
+    }
 }
 
 // https://stackoverflow.com/questions/11381673/detecting-a-mobile-browser

@@ -1,7 +1,7 @@
 
 var rss_queue = [];
 const RSS_FETCH_TIMEOUT_MS = 10000;
-const TIER_STAGGER_MS = [100, 0, 0]; // rss2json needs breathing room; CORS proxies don't
+const TIER_STAGGER_MS = [100, 0, 0, 0, 0]; // rss2json needs breathing room; CORS proxies don't
 const MAX_ITEMS = 8;
 
 function read_rss_into_element(elementName, url) {
@@ -131,10 +131,22 @@ function fetchViaCorsproxy(url) {
         .then(text => parseXmlFeed(text));
 }
 
+function fetchViaCodetabs(url) {
+    return fetchWithTimeout('https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url))
+        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+        .then(text => parseXmlFeed(text));
+}
+
+function fetchViaThingproxy(url) {
+    return fetchWithTimeout('https://thingproxy.freeboard.io/fetch/' + url)
+        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+        .then(text => parseXmlFeed(text));
+}
+
 function fetchViaAllOrigins(url) {
-    return fetchWithTimeout('https://api.allorigins.win/get?url=' + encodeURIComponent(url))
-        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-        .then(({ contents }) => parseXmlFeed(contents));
+    return fetchWithTimeout('https://api.allorigins.win/raw?url=' + encodeURIComponent(url))
+        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+        .then(text => parseXmlFeed(text));
 }
 
 //
@@ -144,13 +156,15 @@ function fetchViaAllOrigins(url) {
 // into tier N+1 as they happen — tiers run concurrently, each at their own pace.
 // The 100ms gap between attempts within a tier gives each service breathing room.
 //
-// Tier 0: rss2json   (RSS-to-JSON API)
-// Tier 1: corsproxy  (CORS proxy, XML parsed in browser)
-// Tier 2: allorigins (CORS proxy, XML parsed in browser)
+// Tier 0: rss2json    (RSS-to-JSON API)
+// Tier 1: corsproxy   (CORS proxy, XML parsed in browser)
+// Tier 2: codetabs    (CORS proxy, XML parsed in browser)
+// Tier 3: thingproxy  (CORS proxy, XML parsed in browser)
+// Tier 4: allorigins  (CORS proxy, XML parsed in browser)
 //
-const RSS_STRATEGIES = [fetchViaRss2Json, fetchViaCorsproxy, fetchViaAllOrigins];
-const rss_tiers = [[], [], []];
-const tier_running = [false, false, false];
+const RSS_STRATEGIES = [fetchViaRss2Json, fetchViaCorsproxy, fetchViaCodetabs, fetchViaThingproxy, fetchViaAllOrigins];
+const rss_tiers = [[], [], [], [], []];
+const tier_running = [false, false, false, false, false];
 
 function pushToTier(tierIndex, feed) {
     if (tierIndex >= RSS_STRATEGIES.length) {

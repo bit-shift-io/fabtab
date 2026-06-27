@@ -154,14 +154,14 @@ function fetchViaCorsproxy(url) {
         .then(text => parseXmlFeed(text));
 }
 
-function fetchViaCodetabs(url) {
-    return fetchWithTimeout('https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url))
+function fetchViaCorseu(url) {
+    return fetchWithTimeout('https://cors.eu.org/' + url)
         .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
         .then(text => parseXmlFeed(text));
 }
 
-function fetchViaThingproxy(url) {
-    return fetchWithTimeout('https://thingproxy.freeboard.io/fetch/' + url)
+function fetchViaCorssh(url) {
+    return fetchWithTimeout('https://proxy.cors.sh/' + url)
         .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
         .then(text => parseXmlFeed(text));
 }
@@ -180,12 +180,12 @@ function fetchViaAllOrigins(url) {
 // The 100ms gap between attempts within a tier gives each service breathing room.
 //
 // Tier 0: corsproxy   (CORS proxy, XML parsed in browser)
-// Tier 1: codetabs    (CORS proxy, XML parsed in browser)
-// Tier 2: thingproxy  (CORS proxy, XML parsed in browser)
+// Tier 1: cors.eu.org (CORS proxy, XML parsed in browser)
+// Tier 2: cors.sh     (CORS proxy, XML parsed in browser)
 // Tier 3: allorigins  (CORS proxy, XML parsed in browser)
 // Tier 4: rss2json    (RSS-to-JSON API — last resort)
 //
-const RSS_STRATEGIES = [fetchViaCorsproxy, fetchViaCodetabs, fetchViaThingproxy, fetchViaAllOrigins, fetchViaRss2Json];
+const RSS_STRATEGIES = [fetchViaCorsproxy, fetchViaCorseu, fetchViaCorssh, fetchViaAllOrigins, fetchViaRss2Json];
 const rss_tiers = [[], [], [], [], []];
 const tier_running = [false, false, false, false, false];
 

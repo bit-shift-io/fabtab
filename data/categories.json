@@ -108,7 +108,8 @@
 			"id": "googlenews",
 			"title": "Google News",
 			"rss_link": "https://news.google.com/rss?gl=US&hl=en-US&ceid=US:en",
-			"website_link": "http://news.google.com/"
+			"website_link": "http://news.google.com/",
+			"preloadPriority": 1
 		},
 		{
 			"id": "bbc",

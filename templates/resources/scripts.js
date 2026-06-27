@@ -1,22 +1,45 @@
 
 var rss_queue = [];
 const RSS_FETCH_TIMEOUT_MS = 10000;
-const TIER_STAGGER_MS = [100, 0, 0, 0, 0]; // rss2json needs breathing room; CORS proxies don't
+const TIER_STAGGER_MS = [0, 0, 0, 0, 100]; // rss2json needs breathing room; CORS proxies don't
 const MAX_ITEMS = 8;
 
-function read_rss_into_element(elementName, url) {
-    rss_queue.push({ elementName, url });
+function read_rss_into_element(elementName, url, preloadPriority) {
+    rss_queue.push({ elementName, url, preloadPriority });
 }
 
-function init_rss_feed(elementName, url, feedId) {
+let _feedObserver = null;
+
+function getFeedObserver() {
+    if (!_feedObserver) {
+        _feedObserver = new IntersectionObserver((entries) => {
+            for (const entry of entries) {
+                if (!entry.isIntersecting) continue;
+                _feedObserver.unobserve(entry.target);
+                const { elementName, url } = entry.target.dataset;
+                pushToTier(0, { elementName, url });
+            }
+        }, { rootMargin: '200px', threshold: 0 });
+    }
+    return _feedObserver;
+}
+
+function init_rss_feed(elementName, url, feedId, preloadPriority) {
     const isCollapsed = localStorage.getItem('feed_collapsed_' + feedId) === 'true';
     if (isCollapsed) {
         const feedBlock = document.getElementById('feed-block-' + feedId);
         if (feedBlock) feedBlock.classList.add('collapsed');
         const toggle = document.getElementById('toggle-' + feedId);
         if (toggle) toggle.innerHTML = '+';
+    } else if (preloadPriority != null) {
+        read_rss_into_element(elementName, url, preloadPriority);
     } else {
-        read_rss_into_element(elementName, url);
+        const container = document.getElementById('feed-block-' + feedId);
+        if (container) {
+            container.dataset.elementName = elementName;
+            container.dataset.url = url;
+            getFeedObserver().observe(container);
+        }
     }
 }
 
@@ -156,13 +179,13 @@ function fetchViaAllOrigins(url) {
 // into tier N+1 as they happen — tiers run concurrently, each at their own pace.
 // The 100ms gap between attempts within a tier gives each service breathing room.
 //
-// Tier 0: rss2json    (RSS-to-JSON API)
-// Tier 1: corsproxy   (CORS proxy, XML parsed in browser)
-// Tier 2: codetabs    (CORS proxy, XML parsed in browser)
-// Tier 3: thingproxy  (CORS proxy, XML parsed in browser)
-// Tier 4: allorigins  (CORS proxy, XML parsed in browser)
+// Tier 0: corsproxy   (CORS proxy, XML parsed in browser)
+// Tier 1: codetabs    (CORS proxy, XML parsed in browser)
+// Tier 2: thingproxy  (CORS proxy, XML parsed in browser)
+// Tier 3: allorigins  (CORS proxy, XML parsed in browser)
+// Tier 4: rss2json    (RSS-to-JSON API — last resort)
 //
-const RSS_STRATEGIES = [fetchViaRss2Json, fetchViaCorsproxy, fetchViaCodetabs, fetchViaThingproxy, fetchViaAllOrigins];
+const RSS_STRATEGIES = [fetchViaCorsproxy, fetchViaCodetabs, fetchViaThingproxy, fetchViaAllOrigins, fetchViaRss2Json];
 const rss_tiers = [[], [], [], [], []];
 const tier_running = [false, false, false, false, false];
 
@@ -222,8 +245,7 @@ function start_process_rss_queue() {
     if (is_processing) return;
     is_processing = true;
     shuffleArray(rss_queue);
-    // Priority feeds jump to the front so rss2json sees them before rate limiting kicks in
-    rss_queue.sort((a, b) => (b.url.includes('news.google.com') ? 1 : 0) - (a.url.includes('news.google.com') ? 1 : 0));
+    rss_queue.sort((a, b) => (a.preloadPriority ?? Infinity) - (b.preloadPriority ?? Infinity));
     for (const feed of rss_queue.splice(0)) {
         if (feed.url.includes('newsapi')) {
             processNewsapi(feed);

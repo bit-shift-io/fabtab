@@ -23,7 +23,7 @@
 		</ul>
 
 		<script type="text/javascript">
-			init_rss_feed("{{ feed.id }}_link", "{{ feed.rss_link }}", "{{ feed.id }}");
+			init_rss_feed("{{ feed.id }}_link", "{{ feed.rss_link }}", "{{ feed.id }}", {{ feed.preloadPriority | default(None) | tojson }});
 		</script>
 	</div>
 

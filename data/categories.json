@@ -7,12 +7,6 @@
 			"website_link": "https://magazine.sebastianraschka.com/"
 		},
 		{
-			"id": "thegradient",
-			"title": "The Gradient",
-			"rss_link": "https://thegradient.pub/rss/",
-			"website_link": "https://thegradient.pub/"
-		},
-		{
 			"id": "towardsdatascience",
 			"title": "Towards Data Science",
 			"rss_link": "https://towardsdatascience.com/feed",

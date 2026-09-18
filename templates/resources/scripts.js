@@ -2,7 +2,7 @@
 var rss_queue = [];
 const RSS_FETCH_TIMEOUT_MS = 10000;
 const TIER_STAGGER_MS = [0, 0, 0, 0, 100]; // rss2json needs breathing room; CORS proxies don't
-const MAX_ITEMS = 8;
+const MAX_ITEMS = 5;
 
 function read_rss_into_element(elementName, url, preloadPriority) {
     rss_queue.push({ elementName, url, preloadPriority });

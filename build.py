@@ -8,7 +8,7 @@ from staticjinja import Site
 from jinja2 import Environment, FileSystemLoader
 #import logging
 import os
-import json
+import json5 as json
 import uuid
 
 class RelEnvironment(Environment):
@@ -29,7 +29,7 @@ if __name__ == "__main__":
 
     searchpath="templates"
 
-    with open('data/categories.json') as json_file:
+    with open('data/categories.jsonc') as json_file:
         categories = json.load(json_file)
 
     env_globals={
@@ -45,7 +45,7 @@ if __name__ == "__main__":
         loader=FileSystemLoader(searchpath=searchpath, encoding='utf8', followlinks=True)
     )
     environment.globals.update(env_globals)
- 
+
     site = MySite(environment=environment, outpath="public", searchpath=searchpath, encoding='utf8')#, logger=logger)
 
     # enable automatic reloading

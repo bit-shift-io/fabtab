@@ -3,7 +3,7 @@
 command = "pip install -r requirements.txt && python build.py"
 
 # Replace "dist" with whatever folder your build.py outputs your final static files to
-publish = "dist" 
+publish = "public"
 
 [build.environment]
 PYTHON_VERSION = "3.11"

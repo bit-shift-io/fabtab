@@ -36,7 +36,7 @@ jobs:
         uses: py-actions/py-dependency-install@v2
 
       - name: Build
-        run: cd tools && ./build.py
+        run: ./build.py
 
       - name: Upload
         run: cd tools && ./upload.py ${{secrets.FTP_USERNAME}} ${{secrets.FTP_PASSWORD}}
